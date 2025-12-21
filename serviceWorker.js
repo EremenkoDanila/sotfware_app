@@ -1,4 +1,4 @@
-const CACHE_NAME = "tile-notes-cache-v1";
+const CACHE_NAME = "sotfware-app-cache-v1";
 const urlsToCache = [
   "/sotfware_app/",
   "/sotfware_app/index.html",
