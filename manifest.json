@@ -8,14 +8,9 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/sotfware_app/icons/it_soft-192.png",
+      "src": "/sotfware_app/icons/it_sof.png",
       "type": "image/png",
       "sizes": "192x192"
-    },
-    {
-      "src": "/sotfware_app/icons/it_soft-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
     }
   ]
 }
