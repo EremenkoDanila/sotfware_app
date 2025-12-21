@@ -2,7 +2,7 @@ const CACHE_NAME = "tile-notes-cache-v1";
 const urlsToCache = [
   "/sotfware_app/",
   "/sotfware_app/index.html",
-  "/sotfware_app/icons/it_sof.png"
+  "/sotfware_app/icons/it_soft.png"
 ];
 
 self.addEventListener("install", (event) => {
