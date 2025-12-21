@@ -1,5 +1,5 @@
 const CACHE_NAME = "tile-notes-cache-v1";
-const urlsToCache = ["/RepoName/", "/RepoName/index.html", "/RepoName/icons/it_soft-192.png", "/RepoName/icons/it_soft-512.png"];
+const urlsToCache = ["/RepoName/", "/RepoName/index.html", "/RepoName/icons/it_soft.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
