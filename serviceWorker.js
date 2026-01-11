@@ -1,5 +1,5 @@
 const CACHE_NAME = "sotfware-app-cache-v1";
-const urlsToCache = [
+const STATIC_ASSETS = [
   "/sotfware_app/",
   "/sotfware_app/index.html",
   "/sotfware_app/manifest.json",
@@ -13,10 +13,7 @@ const urlsToCache = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("Cache opened, adding URLs:", urlsToCache);
-      return cache.addAll(urlsToCache);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
   );
   self.skipWaiting();
 });
@@ -27,10 +24,8 @@ self.addEventListener("activate", (event) => {
       Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
-            console.log("Deleting old cache:", cache);
             return caches.delete(cache);
           }
-          return null;
         })
       )
     )
@@ -39,41 +34,17 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  // Не обрабатываем запросы к API и другие не-GET запросы
-  if (event.request.method !== 'GET' || event.request.url.includes('/api/')) {
-    return;
+  // Для статических файлов (иконки, манифест) используем кэш
+  if (event.request.url.includes('/icons/') || 
+      event.request.url.endsWith('manifest.json') ||
+      event.request.url.endsWith('index.html')) {
+    event.respondWith(
+      caches.match(event.request).then((response) => {
+        return response || fetch(event.request);
+      })
+    );
+  } else {
+    // Для всех остальных файлов (JS, CSS) просто делаем сетевой запрос
+    event.respondWith(fetch(event.request));
   }
-
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Если есть в кэше - возвращаем из кэша
-      if (response) {
-        console.log("Serving from cache:", event.request.url);
-        return response;
-      }
-      
-      // Иначе делаем сетевой запрос и кэшируем для будущего использования
-      console.log("Fetching from network:", event.request.url);
-      return fetch(event.request).then((networkResponse) => {
-        // Клонируем ответ, так как он может быть использован только один раз
-        const responseToCache = networkResponse.clone();
-        
-        // Кэшируем только успешные ответы и статичные ресурсы
-        if (networkResponse.status === 200) {
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        
-        return networkResponse;
-      }).catch((error) => {
-        console.error("Fetch failed:", error);
-        // Можно вернуть fallback страницу или пустой ответ
-        return new Response("Network error", {
-          status: 408,
-          headers: { "Content-Type": "text/plain" }
-        });
-      });
-    })
-  );
 });
