@@ -2,6 +2,7 @@ const CACHE_NAME = "software-app-cache-v1";
 const urlsToCache = [
   "/sotfware_app/",
   "/sotfware_app/index.html",
+  "/sotfware_app/manifest.json",
   "/sotfware_app/icons/it_soft.png",
   "/sotfware_app/icons/Git_icon.png",
   "/sotfware_app/icons/Postgre_SQL.png",
